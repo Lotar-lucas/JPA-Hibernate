@@ -98,7 +98,7 @@ EntityManager em = emf.createEntityManager();
 - `merge()` - UPDATE (atualiza registro existente)
 - `remove()` - DELETE (remove registro)
 
-### 5. **Estados de uma Entidade**
+### 4. **Estados de uma Entidade**
 
 - **NEW (Transient)** - Objeto criado mas não gerenciado pelo EntityManager
 - **MANAGED** - Objeto sendo monitorado pelo EntityManager (sincronizado com o BD)
@@ -179,7 +179,7 @@ Descomente a seção que deseja testar de cada vez.
 Com esta estratégia, o ID é gerado pelo banco (AUTO_INCREMENT). O Hibernate faz o INSERT imediatamente ao chamar `persist()`.
 
 
-### 4. **Objeto deve estar MANAGED para remoção**
+### 2. **Objeto deve estar MANAGED para remoção**
 ```java
 // ✅ CORRETO
 Pessoa pessoa = em.find(Pessoa.class, 1);  // MANAGED
