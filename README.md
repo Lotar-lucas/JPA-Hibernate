@@ -1,253 +1,238 @@
-# Introdução JPA e Hibernate (bônus Maven e MySQL) - Aulão #006
-###### DevSuperior - sua carreira dev com fundamento de ensino superior
+# 📚 Revisão: JPA e Hibernate com Jakarta EE
+###### Projeto de estudo baseado no curso DevSuperior - Aulão #006
 
-**Comunidade no Discord**:
-https://discord.gg/SbjpsFv
+> **Este projeto é uma revisão dos conceitos de JPA (Java Persistence API) e Hibernate**, adaptado para usar **Jakarta EE** ao invés das antigas dependências `javax.persistence`.
 
-Não perca as novidades:
-- https://instagram.com/devsuperior.ig
-- https://facebook.com/devsuperior.fb
-- https://youtube.com/devsuperior
-- https://twitter.com/devsuperior
+## 🎯 Objetivo do Projeto
 
-Assista o vídeo desta aula:
+Este repositório serve como material de **consulta e revisão** dos principais conceitos de:
+- **JPA (Java Persistence API)**
+- **Hibernate ORM 6.x**
+- **Jakarta Persistence 3.0**
+- **Mapeamento Objeto-Relacional (ORM)**
+- **CRUD básico com banco de dados MySQL**
+
+---
+
+## 📹 Referência Original
+
+Baseado no **Aulão #006** da DevSuperior:
 
 [![Image](https://img.youtube.com/vi/CAP1IPgeJkw/mqdefault.jpg "Vídeo no Youtube")](https://youtu.be/CAP1IPgeJkw)
 
-## Sumário
-- [O que você vai aprender](#O-que-você-vai-aprender)
-- [Pré-requisitos](#Pré-requisitos)
-- [Visão geral sobre mapeamento objeto-relacional](#Visão-geral-sobre-mapeamento-objeto-relacional)
-- [JPA](#JPA)
-- [Criando uma aplicação simples](#Criando-uma-aplicação-simples)
+---
 
-## O que você vai aprender
-- Visão geral sobre mapeamento objeto-relacional
-- Introdução ao JPA - Java Persistence API
+## 🛠️ Tecnologias Utilizadas
 
-## Pré-requisitos
+| Tecnologia | Versão | Descrição |
+|------------|--------|-----------|
+| **Java** | 11+ | Linguagem de programação |
+| **Maven** | 3.x | Gerenciador de dependências |
+| **Hibernate ORM** | 6.2.7.Final | Implementação JPA |
+| **Jakarta Persistence** | 3.0 | API de persistência (substitui javax.persistence) |
+| **MySQL** | 8.0+ | Banco de dados relacional |
+| **MySQL Connector/J** | 8.0.33 | Driver JDBC para MySQL |
 
-- Lógica de programação
-- OO básica
-- BD básico
+### ⚠️ Importante: Migração javax → jakarta
 
-## Visão geral sobre mapeamento objeto-relacional
+Este projeto foi **atualizado** para usar:
+- ✅ `jakarta.persistence.*`
+- ❌ ~~`javax.persistence.*`~~ 
 
-![myImage](https://github.com/devsuperior/aulao006/raw/master/img-problema-orm.png)
+---
 
-### Outros problemas que devem ser tratados:
-- Contexto de persistência (objetos que estão ou não atrelados a uma conexão em um dado momento)
-- Mapa de identidade (cache de objetos já carregados)
-- Carregamento tardio (lazy loading)
-- Outros
+## 📁 Estrutura do Projeto
 
-## JPA
+```
+aulao006/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   ├── aplicacao/
+│   │   │   │   └── Programa.java          # Classe principal com exemplos
+│   │   │   └── dominio/
+│   │   │       └── Pessoa.java            # Entidade JPA
+│   │   └── resources/
+│   │       └── META-INF/
+│   │           └── persistence.xml        # Configuração JPA
+├── pom.xml                                # Dependências Maven
+└── README.md                              # Este arquivo
+```
 
-Java Persistence API (JPA) é a especificação padrão da plataforma Java EE (pacote javax.persistence) para mapeamento objeto-relacional e persistência de dados.
+---
 
-JPA é apenas uma especificação (JSR 338):
-http://download.oracle.com/otn-pub/jcp/persistence-2_1-fr-eval-spec/JavaPersistence.pdf
+## 🧩 Conceitos Abordados
 
-Para trabalhar com JPA é preciso incluir no projeto uma implementação da API (ex: Hibernate).
+### 1. **Mapeamento Objeto-Relacional (ORM)**
 
-Arquitetura de uma aplicação que utiliza JPA:
+O ORM resolve o problema de incompatibilidade entre o paradigma orientado a objetos e o modelo relacional de bancos de dados.
 
-![myImage](https://github.com/devsuperior/aulao006/raw/master/img-arquitetura-jpa.png)
+**Problemas tratados pelo ORM:**
+- ✅ Conversão de objetos Java para tabelas SQL
+- ✅ Contexto de persistência (objetos MANAGED vs DETACHED)
+- ✅ Mapa de identidade
+- ✅ Carregamento tardio (lazy loading)
+- ✅ Gerenciamento de transações
 
-### Principais classes:
+### 2. **JPA - Java Persistence API**
 
-#### EntityManager
-https://docs.oracle.com/javaee/7/api/javax/persistence/EntityManager.html
+JPA é uma **especificação** (não uma implementação) que define como fazer ORM em Java.
 
-Um objeto EntityManager encapsula uma conexão com a base de dados e serve para efetuar operações de acesso a dados (inserção, remoção, deleção, atualização) em entidades (clientes, produtos, pedidos, etc.) por ele monitoradas em um mesmo contexto de persistência.
+- 📋 **Especificação**: Jakarta Persistence 3.0 (JSR 338)
+- 🔧 **Implementação**: Hibernate, EclipseLink, OpenJPA
 
-Escopo: tipicamente mantem-se uma instância única de EntityManager para cada thread do sistema (no caso de aplicações web, para cada requisição ao sistema). 
 
-#### EntityManagerFactory
-https://docs.oracle.com/javaee/7/api/javax/persistence/EntityManagerFactory.html
 
-Um objeto EntityManagerFactory é utilizado para instanciar objetos EntityManager.
+### 3. **EntityManager - O Gerenciador de Persistência**
 
-Escopo: tipicamente mantem-se uma instância única de EntityManagerFactory para toda aplicação.
-
-## Criando uma aplicação simples
-
-![myImage](https://github.com/devsuperior/aulao006/raw/master/img-pessoa.png)
-
-### Passos
-
-#### Crie uma base de dados MySQL vazia
-- Instale o Xampp no seu computador
-- Inicie o Apache e o MySQL
-- No PhpMyAdmin, crie uma base de dados chamada "aulajpa"
-
-#### Crie um novo projeto Maven
-- File -> New -> Other -> Maven Project
-- Create Simple Project -> Next
-  - Group Id: com.educandoweb
-  - Artifact Id: aulajpamaven
-  -Finish
-
-#### Copie as classes Programa e Pessoa para o novo projeto
+O `EntityManager` é responsável por gerenciar o ciclo de vida das entidades:
 
 ```java
-package dominio;
-
-import java.io.Serializable;
-
-public class Pessoa implements Serializable {
-	private static final long serialVersionUID = 1L;
-
-	private Integer id;
-	private String nome;
-	private String email;
-
-	public Pessoa() {
-	}
-
-	public Pessoa(Integer id, String nome, String email) {
-		super();
-		this.id = id;
-		this.nome = nome;
-		this.email = email;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	@Override
-	public String toString() {
-		return "Pessoa [id=" + id + ", nome=" + nome + ", email=" + email + "]";
-	}
-}
+EntityManagerFactory emf = Persistence.createEntityManagerFactory("exemplo-jpa");
+EntityManager em = emf.createEntityManager();
 ```
 
+**Operações principais:**
+- `persist()` - INSERT (adiciona novo registro)
+- `find()` - SELECT (busca por ID)
+- `merge()` - UPDATE (atualiza registro existente)
+- `remove()` - DELETE (remove registro)
+
+### 5. **Estados de uma Entidade**
+
+- **NEW (Transient)** - Objeto criado mas não gerenciado pelo EntityManager
+- **MANAGED** - Objeto sendo monitorado pelo EntityManager (sincronizado com o BD)
+- **DETACHED** - Objeto que estava MANAGED mas o EntityManager foi fechado
+- **REMOVED** - Objeto marcado para remoção
+
+---
+
+## ⚙️ Configuração
+
+### persistence.xml
+
+Arquivo de configuração localizado em `src/main/resources/META-INF/persistence.xml`:
+
+```xml
+<persistence-unit name="exemplo-jpa" transaction-type="RESOURCE_LOCAL">
+    <properties>
+        <!-- Conexão com MySQL -->
+        <property name="jakarta.persistence.jdbc.url"
+            value="jdbc:mysql://localhost/JPA_Hibernate?useSSL=false&amp;serverTimezone=UTC" />
+        <property name="jakarta.persistence.jdbc.driver" 
+            value="com.mysql.cj.jdbc.Driver" />
+        <property name="jakarta.persistence.jdbc.user" value="" />
+        <property name="jakarta.persistence.jdbc.password" value="" />
+        
+        <!-- Hibernate -->
+        <property name="hibernate.hbm2ddl.auto" value="update" />
+        <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+        <property name="hibernate.show_sql" value="true" />
+        <property name="hibernate.format_sql" value="true" />
+    </properties>
+</persistence-unit>
+```
+
+**Propriedades importantes:**
+- `hibernate.hbm2ddl.auto=update` - Cria/atualiza tabelas automaticamente
+- `hibernate.show_sql=true` - Exibe SQL no console (útil para debug)
+- `hibernate.format_sql=true` - Formata o SQL exibido
+
+---
+
+## 🚀 Como Executar
+
+### Pré-requisitos
+
+1. **Java 11+** instalado
+2. **Maven** instalado
+3. **MySQL** rodando na porta 3306
+4. Criar banco de dados: `CREATE DATABASE JPA_Hibernate;`
+5. Criar usuário: `CREATE USER 'xxx'@'localhost' IDENTIFIED BY 'xxxx';`
+6. Dar permissões de usuário
+
+### Executar o projeto
+
+```bash
+# Limpar e compilar
+mvn clean compile
+
+# Executar a aplicação
+mvn exec:java -Dexec.mainClass="aplicacao.Programa"
+```
+
+### Testando as operações
+
+No arquivo `Programa.java`, você encontrará três seções comentadas:
+
+1. **PERSISTENCE** - Insere dados no banco (INSERT)
+2. **GET** - Busca dados por ID (SELECT)
+3. **DELETE** - Remove dados (DELETE)
+
+Descomente a seção que deseja testar de cada vez.
+
+---
+
+## ⚠️ Pontos de Atenção
+
+### 1. **GenerationType.IDENTITY**
+Com esta estratégia, o ID é gerado pelo banco (AUTO_INCREMENT). O Hibernate faz o INSERT imediatamente ao chamar `persist()`.
+
+
+### 4. **Objeto deve estar MANAGED para remoção**
 ```java
-package aplicacao;
+// ✅ CORRETO
+Pessoa pessoa = em.find(Pessoa.class, 1);  // MANAGED
+em.getTransaction().begin();
+em.remove(pessoa);  // Funciona!
+em.getTransaction().commit();
 
-import dominio.Pessoa;
-
-public class Programa {
-
-	public static void main(String[] args) {
-		Pessoa p1 = new Pessoa(1, "Carlos da Silva", "carlos@gmail.com");
-		Pessoa p2 = new Pessoa(2, "Joaquim Torres", "joaquim@gmail.com");
-		Pessoa p3 = new Pessoa(3, "Ana Maria", "ana@gmail.com");
-
-		System.out.println(p1);
-		System.out.println(p2);
-		System.out.println(p3);
-	}
-}
+// ❌ ERRO
+Pessoa pessoa = new Pessoa(1, "Nome", "email");  // NEW, não MANAGED
+em.remove(pessoa);  // Erro: objeto não está sendo gerenciado
 ```
 
-#### Atualize o Maven do projeto para Java 11
-- Edite o arquivo pom.xml
-- Inclua o conteúdo abaixo
-- Salve o projeto
-- Botão direito no projeto -> Maven -> Update Project
+---
 
-```xml
-<properties>
-	<maven.compiler.source>11</maven.compiler.source>
-	<maven.compiler.target>11</maven.compiler.target>
-</properties>
-```
+## 🐛 Troubleshooting
 
-#### Inclua as dependências Maven a serem baixadas:
+### "package jakarta.persistence does not exist"
+- ✅ Execute `mvn clean install` para baixar as dependências
+- ✅ Verifique se está usando Hibernate 6.x no `pom.xml`
+- ✅ Recarregue o projeto Maven na IDE
 
-```xml
-<dependencies>
-	<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
-	<dependency>
-		<groupId>org.hibernate</groupId>
-		<artifactId>hibernate-core</artifactId>
-		<version>5.4.12.Final</version>
-	</dependency>
+### Erro de conexão MySQL
+- ✅ Verifique se o MySQL está rodando
+- ✅ Confirme usuário e senha no `persistence.xml`
+- ✅ Verifique se o banco de dados foi criado
 
-	<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager -->
-	<dependency>
-		<groupId>org.hibernate</groupId>
-		<artifactId>hibernate-entitymanager</artifactId>
-		<version>5.4.12.Final</version>
-	</dependency>
+---
 
-	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-	<dependency>
-		<groupId>mysql</groupId>
-		<artifactId>mysql-connector-java</artifactId>
-		<version>8.0.19</version>
-	</dependency>
-</dependencies>
-```
+## 📚 Recursos Adicionais
 
-#### Configure o JPA no seu projeto por meio do arquivo persistence.xml
-- Crie uma pasta "META-INF" a partir da pasta "resources"
-- Dentro da pasta META-INF crie um arquivo "persistence.xml"
-- Conteúdo do arquivo persistence.xml:
+- [Documentação Hibernate 6](https://hibernate.org/orm/documentation/6.2/)
+- [Jakarta Persistence Specification](https://jakarta.ee/specifications/persistence/3.0/)
+- [MySQL Connector/J](https://dev.mysql.com/doc/connector-j/8.0/en/)
+- [Maven Guide](https://maven.apache.org/guides/)
+- [DevSuperior - Curso Completo](https://devsuperior.com.br)
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
-    http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
-	version="2.1">
+---
 
-	<persistence-unit name="exemplo-jpa" transaction-type="RESOURCE_LOCAL">
-	<properties>
-		<property name="javax.persistence.jdbc.url"
-			value="jdbc:mysql://localhost/aulajpa?useSSL=false&amp;serverTimezone=UTC" />
+## 🎓 Aprendizados Principais
 
-		<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-		<property name="javax.persistence.jdbc.user" value="root" />
-		<property name="javax.persistence.jdbc.password" value="" />
+1. **JPA é uma especificação**, Hibernate é uma implementação
+2. **EntityManager** gerencia o ciclo de vida das entidades
+3. Entidades podem estar em 4 estados: NEW, MANAGED, DETACHED, REMOVED
+4. Objetos devem estar **MANAGED** para serem removidos
+6. A migração de **javax → jakarta** é necessária com Hibernate 6+
 
-		<property name="hibernate.hbm2ddl.auto" value="update" />
+---
 
-		<!-- https://docs.jboss.org/hibernate/orm/5.4/javadocs/org/hibernate/dialect/package-summary.html -->
-		<property name="hibernate.dialect" 	value="org.hibernate.dialect.MySQL8Dialect" />
-	</properties>
-	</persistence-unit>
-</persistence>
-```
+## 🤝 Contribuições
 
-#### Inclua os MAPEAMENTOS na classe de domínio:
+Este é um projeto de estudo pessoal baseado no material da **DevSuperior**, mas sugestões são bem-vindas!
 
-```java
-package dominio;
+---
 
-import (...)
+**Desenvolvido como material de revisão e consulta 📖**
 
-@Entity
-public class Pessoa implements Serializable {
-	private static final long serialVersionUID = 1L;
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer id;
-	(...)
-```
-
-#### Na classe "Programa" faça os testes (veja vídeo-aula).
